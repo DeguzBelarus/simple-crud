@@ -88,9 +88,12 @@ export class UserController {
           response.write(JSON.stringify({ message: 'Incorrect data to add a new user' }));
           response.end();
         } else {
-          this.users = [...this.users, new User(uuidV4(), body.username, body.age, body.hobbies)];
+          const newUser = new User(uuidV4(), body.username, body.age, body.hobbies);
+          this.users = [...this.users, newUser];
           response.writeHead(201, { 'Content-Type': 'application/json' });
-          response.write(JSON.stringify({ message: 'The user was successfully added' }));
+          response.write(
+            JSON.stringify({ message: 'The user was successfully added', userData: newUser })
+          );
           response.end();
         }
       }
