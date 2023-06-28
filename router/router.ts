@@ -1,5 +1,9 @@
 import http from 'http';
 
+import { RequestMethodsEnum } from '../types/types';
+import { API_PREFIX } from '../constants/constants';
+import { userController } from '../controllers/user-controller';
+
 export const router = (
   request: http.IncomingMessage,
   response: http.ServerResponse<http.IncomingMessage> & {
@@ -8,11 +12,29 @@ export const router = (
 ) => {
   const url = request.url;
   const method = request.method;
+  const param = url ? url.split('/')[3] : null;
 
-  switch (url) {
+  switch (`${url?.split('/').slice(0, 3).join('/')}/`) {
+    case API_PREFIX:
+      switch (method) {
+        case RequestMethodsEnum.GET:
+          !param
+            ? userController.getUsers(request, response)
+            : userController.getOneUser(param, request, response);
+          break;
+        case RequestMethodsEnum.POST:
+          console.log('POST');
+          break;
+        case RequestMethodsEnum.PUT:
+          console.log('PUT');
+          break;
+        case RequestMethodsEnum.DELETE:
+          console.log('DELETE');
+      }
+      break;
     default:
       response.writeHead(404, { 'Content-Type': 'application/json' });
-      response.write("This route doesn't exist");
+      response.write(JSON.stringify({ message: "This route doesn't exist" }));
       response.end();
   }
 };

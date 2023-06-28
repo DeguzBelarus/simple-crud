@@ -1,16 +1,16 @@
 export interface IUser {
-  id: number;
+  id: string;
   username: string;
   age: number;
   hobbies: Array<string>;
 }
 
 export class User implements IUser {
-  id: number;
+  id: string;
   username: string;
   age: number;
   hobbies: string[];
-  constructor(id: number, username: string, age: number, hobbies: Array<string>) {
+  constructor(id: string, username: string, age: number, hobbies: Array<string>) {
     this.id = id;
     this.username = username;
     this.age = age;
