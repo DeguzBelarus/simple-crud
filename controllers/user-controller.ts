@@ -1,12 +1,25 @@
 import http from 'http';
-import { validate as uuidValidate } from 'uuid';
+import { validate as uuidValidate, v4 as uuidV4 } from 'uuid';
 
-import { IUser } from '../types/types';
+import { IAddUserRequestData, IUser, Undefinable } from '../types/types';
+
+class User implements IUser {
+  id: string;
+  username: string;
+  age: number;
+  hobbies: string[];
+  constructor(id: string, username: string, age: number, hobbies: Array<string>) {
+    this.id = id;
+    this.username = username;
+    this.age = age;
+    this.hobbies = hobbies;
+  }
+}
 
 export class UserController {
   users: Array<IUser> = [];
 
-  async getUsers(
+  getUsers(
     request: http.IncomingMessage,
     response: http.ServerResponse<http.IncomingMessage> & {
       req: http.IncomingMessage;
@@ -19,7 +32,7 @@ export class UserController {
     response.end();
   }
 
-  async getOneUser(
+  getOneUser(
     id: string,
     request: http.IncomingMessage,
     response: http.ServerResponse<http.IncomingMessage> & {
@@ -44,6 +57,44 @@ export class UserController {
         response.end();
       }
     }
+  }
+
+  addUser(
+    request: http.IncomingMessage,
+    response: http.ServerResponse<http.IncomingMessage> & {
+      req: http.IncomingMessage;
+    }
+  ) {
+    const requestBodyBuffer: Array<Uint8Array> = [];
+    let body: Undefinable<IAddUserRequestData>;
+    request.on('data', (chunks) => {
+      requestBodyBuffer.push(chunks);
+    });
+    request.on('end', () => {
+      body = JSON.parse(Buffer.concat(requestBodyBuffer).toString());
+
+      if (!body?.age || !body?.hobbies || !body?.username) {
+        response.writeHead(400, { 'Content-Type': 'application/json' });
+        response.write(JSON.stringify({ message: 'Insufficient data to add a new user' }));
+        response.end();
+      } else {
+        if (
+          typeof body.username !== 'string' ||
+          typeof body.age !== 'number' ||
+          !Array.isArray(body.hobbies) ||
+          !body.hobbies.every((hobbyName) => typeof hobbyName === 'string')
+        ) {
+          response.writeHead(400, { 'Content-Type': 'application/json' });
+          response.write(JSON.stringify({ message: 'Incorrect data to add a new user' }));
+          response.end();
+        } else {
+          this.users = [...this.users, new User(uuidV4(), body.username, body.age, body.hobbies)];
+          response.writeHead(201, { 'Content-Type': 'application/json' });
+          response.write(JSON.stringify({ message: 'The user was successfully added' }));
+          response.end();
+        }
+      }
+    });
   }
 }
 

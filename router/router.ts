@@ -23,7 +23,7 @@ export const router = (
             : userController.getOneUser(param, request, response);
           break;
         case RequestMethodsEnum.POST:
-          console.log('POST');
+          userController.addUser(request, response);
           break;
         case RequestMethodsEnum.PUT:
           console.log('PUT');
