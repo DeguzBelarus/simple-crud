@@ -29,7 +29,7 @@ export const router = (
           userController.updateUser(param, request, response);
           break;
         case RequestMethodsEnum.DELETE:
-          console.log('DELETE');
+          userController.deleteUser(param, request, response);
       }
       break;
     default:

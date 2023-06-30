@@ -99,7 +99,7 @@ export class UserController {
         }
       } catch (error) {
         if (error instanceof Error) {
-          response.writeHead(400, { 'Content-Type': 'application/json' });
+          response.writeHead(500, { 'Content-Type': 'application/json' });
           response.write(JSON.stringify({ message: error.message }));
           response.end();
         }
@@ -168,12 +168,42 @@ export class UserController {
         }
       } catch (error) {
         if (error instanceof Error) {
-          response.writeHead(400, { 'Content-Type': 'application/json' });
+          response.writeHead(500, { 'Content-Type': 'application/json' });
           response.write(JSON.stringify({ message: error.message }));
           response.end();
         }
       }
     });
+  }
+
+  deleteUser(
+    id: Nullable<string>,
+    request: http.IncomingMessage,
+    response: http.ServerResponse<http.IncomingMessage> & {
+      req: http.IncomingMessage;
+    }
+  ) {
+    if (!uuidValidate(id || '')) {
+      response.writeHead(400, { 'Content-Type': 'application/json' });
+      response.write(JSON.stringify({ message: 'Invalid uuid' }));
+      response.end();
+    } else {
+      const foundUserIndex = this.users.findIndex((user) => user.id === id);
+      if (foundUserIndex === -1) {
+        response.writeHead(404, { 'Content-Type': 'application/json' });
+        response.write(JSON.stringify({ message: `User with id ${id} was not found` }));
+        response.end();
+      } else {
+        this.users = this.users.filter((user) => user.id !== id);
+        response.writeHead(204, { 'Content-Type': 'application/json' });
+        response.write(
+          JSON.stringify({
+            message: `The user with id ${id} was successfully deleted`,
+          })
+        );
+        response.end();
+      }
+    }
   }
 }
 
