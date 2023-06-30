@@ -3,6 +3,7 @@ import http from 'http';
 import { RequestMethodsEnum } from '../types/types';
 import { API_PREFIX } from '../constants/constants';
 import { userController } from '../controllers/user-controller';
+import { getFirstParam, getUrl } from './utils';
 
 export const router = (
   request: http.IncomingMessage,
@@ -12,9 +13,9 @@ export const router = (
 ) => {
   const url = request.url;
   const method = request.method;
-  const param = url ? url.split('/')[3] : null;
+  const param = getFirstParam(url);
 
-  switch (`${url?.split('/').slice(0, 3).join('/')}/`) {
+  switch (getUrl(url)) {
     case API_PREFIX:
       switch (method) {
         case RequestMethodsEnum.GET:
