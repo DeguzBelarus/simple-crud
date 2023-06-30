@@ -4,8 +4,8 @@
   "description": "",
   "main": "server.ts",
   "scripts": {
-    "start:prod": "cross-env NODE_ENV=production npm run server:build && node ./build/server",
     "start:dev": "nodemon --esm server.ts",
+    "start:prod": "tsc & cross-env NODE_ENV=production node ./build/server",
     "server:build": "tsc"
   },
   "author": "",
