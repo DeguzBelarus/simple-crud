@@ -6,6 +6,7 @@ export enum RequestMethodsEnum {
 }
 
 export type Undefinable<T> = T | undefined;
+export type Nullable<T> = T | null;
 
 export interface IUser {
   id: string;

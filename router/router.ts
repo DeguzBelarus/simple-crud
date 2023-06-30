@@ -26,7 +26,7 @@ export const router = (
           userController.addUser(request, response);
           break;
         case RequestMethodsEnum.PUT:
-          console.log('PUT');
+          userController.updateUser(param, request, response);
           break;
         case RequestMethodsEnum.DELETE:
           console.log('DELETE');
