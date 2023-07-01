@@ -7,7 +7,7 @@
     "start:dev": "nodemon --esm server.ts",
     "start:prod": "tsc & cross-env NODE_ENV=production node ./build/server",
     "server:build": "tsc",
-    "test": "jest --silent --forceExit",
+    "test": "jest --silent --detectOpenHandles",
     "test:verbose": "jest"
   },
   "author": "",

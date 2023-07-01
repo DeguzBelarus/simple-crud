@@ -32,6 +32,10 @@ const putData: IUser = {
 };
 
 describe('API tests', () => {
+  afterEach(() => {
+    server.close();
+  });
+
   test('make a root GET request and get all users empty array', async () => {
     const emptyArray: Array<IUser> = [];
     const response = await request(server).get(API_PREFIX);
