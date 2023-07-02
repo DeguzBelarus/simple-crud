@@ -6,9 +6,9 @@
   "scripts": {
     "start:dev": "nodemon --esm server.ts",
     "start:prod": "tsc & cross-env NODE_ENV=production node ./build/server",
+    "start:multi": "cross-env NODE_ENV=multi nodemon --esm server.ts",
     "server:build": "tsc",
-    "test": "jest --silent --detectOpenHandles",
-    "test:verbose": "jest"
+    "test": "jest --detectOpenHandles"
   },
   "author": "",
   "license": "ISC",

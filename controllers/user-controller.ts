@@ -1,5 +1,6 @@
 import http from 'http';
 import { validate as uuidValidate, v4 as uuidV4 } from 'uuid';
+import cluster from 'cluster';
 
 import { IAddUserRequestData, IUser, Nullable, Undefinable } from '../types/types';
 
@@ -208,3 +209,10 @@ export class UserController {
 }
 
 export const userController = new UserController();
+
+if (cluster.isPrimary) {
+  cluster.on('message', (message) => {
+    console.log('ddd', message);
+    cluster.emit('response master controller data', userController);
+  });
+}
