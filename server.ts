@@ -33,7 +33,7 @@ if (process.env.NODE_ENV !== 'multi') {
       console.log(`Side server has been started on port ${SidePort} in development mode...`);
       if (Number(cluster.worker?.id) === numCPUs - 1 && cluster.isWorker) {
         console.log('all workers are ready');
-        cluster.worker?.send({ msg: 'request master controller data' });
+        cluster.worker?.send('request master controller data');
       }
     });
   }
